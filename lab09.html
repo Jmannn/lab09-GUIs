@@ -1,0 +1,225 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>COSC346 Week 9 - The SpeakLine Application</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   	<link rel="stylesheet" type="text/css" href="../phplabbook/labbookswift.css">
+	<link rel="stylesheet" type="text/css" href="../cosc346labstyle.css">
+	<script src="../jquery-1.11.1.min.js"></script>
+	<script src="../toc.min.js"></script>
+	<script src="../cosc346labscript.js"></script>
+</head>
+<body>
+
+	<!-- Banner -->
+	<div class="banner">
+		<a href="../../labs.php">COSC346 - Object Oriented Programming and User Interfaces</a>
+	</div>
+		
+	<!-- Lab title -->		
+	<h1>Week 9—The SpeakLine Application</h1>
+	
+	<!-- Table of Contents -->
+	<div id="toc"></div>
+		
+		
+	<h2>Goals</h2>
+	<div class="block">
+		<ul class="toplist">
+			<li>To implement a delegate that conforms to a delegate protocol</li>
+		</ul>
+	</div>
+
+
+	<h2>Preparation</h2>
+	<div class="block">
+	  <ul class="toplist">
+	    <li>Complete <a href="../lab08/lab08.html">Lab 8</a>—you need to know how to handle targets/actions in the Xcode Interface Builder.</li>
+	    <li>Our aim is to try to make sure that the lab exercises are self-contained, however a number of the exercises are based on material from “Cocoa Programming for Mac OS X,” Hillegass and Preble. They use their SpeakLine application to illustrate target/action and delegation in macOS programming. You have already explored targets and actions in <a href="../lab08/lab08.html">lab 8</a>.
+
+  Although the 5th revision focuses on Swift, we will often refer to the 4th edition, with some occasional notes for those who are using the 5th edition. Note that the 5th edition is available in the labs. If you have access to the 4th edition, you will need to convert from Objective-C to Swift.  If we refer to the 4th edition, we will try to provide Swift equivalents below to the Objective-C that it uses.
+	      </li>
+	</ul>
+	</div>
+
+	<h2>Simple speech synthesiser application</h2>
+
+	<p>
+	  (For further information, see Chapter 5 (4th ed.) beginning from the “Start the SpeakLine Example” section, and proceeding up to the “For the More Curious: Setting the Target Programmatically” section.)
+	  <!-- Build and run your program to make sure everything is working before going on to Chapter 6 (4th ed.).-->
+	</p>
+
+	<p>
+  Create a Cocoa application in Xcode named “SpeakLine”, similarly to how you created your FractionCalculator application. The examples below assume that you have not used storyboards in your project. You could use the stub project from <a href="../lab08/lab08.html">lab 8</a>, or follow the directions linked from the assignments page that change a storyboard-based project into one that does not use storyboards. Alternatively, you could use storyboards, in which case just put the code and interface builder outlets into the view controller that is created for you, instead of your AppDelegate.
+	</p>
+
+	<p>
+	  In the Interface Builder set up a main window containing an <code>NSTextField</code> in which to enter the text of a sentence, and two buttons, “Stop” and “Speak”.
+	</p>
+
+	<p>
+	  You have seen in the screencasts for building the Timer, and in lectures, the connecting of controls in the Interface Builder to code. If you open the assistant editor in Xcode, you can show the Interface Builder and your Swift source file <code>AppDelegate.swift</code> at the same time. 
+	</p>
+	
+	<p>
+	  Control-click and drag from your “Stop” button into your SpeakLine <code>AppDelegate</code> window so that the tip that appears says “Insert Outlet or Action”. When you release you can choose to connect the “Action” and in the “Name” enter “stopIt”. Do the same for your “Speak” button to create an action named “sayIt”.
+	</p>
+	
+	<p>
+	  Using whatever mechanism suits you, create an <span class="codekeyword">IBOutlet</span> for your <code>NSTextField</code> named “<kbd>textField</kbd>”.
+	</p>
+
+	<img class="block" src="images/SpeakLine.png" style="max-width:480px; max-height:124px;" title="SpeakLine GUI" />	
+	
+	<p>
+	  When your application runs, the <code>NSTextField</code> should ideally be ready to accept keyboard input, rather than the user needing to click on it first. If you control-click the window icon in the Interface Builder, you will see its Connection panel. From there you can drag from the <code>initialFirstResponder</code> to your <code>NSTextField</code>.
+	</p>
+	
+	<p>
+	  To make the speech synthesiser work, you will need to create an instance of an <code>NSSpeechSynthesizer</code>. In this work, call the var in your application delegate “<code>speechSynth</code>”. In the constructor of your application delegate, initialise <code>speechSynth</code> using an appropriate <code>NSSpeechSynthesizer</code> constructor. (You may wish to look up the API documentation.)
+	</p>
+	
+	<p>
+	  The stopIt action just needs to call the <code>stopSpeaking</code> method of your <code>speechSynth</code>. The speakIt action can pass the string fetched from <code>textField</code> to the <code>startSpeakingString</code> method of <code>speakIt</code>. Note that you should first check that this string is not empty, however.
+	</p>
+	
+	<h2>Implementing a delegate protocol</h2>
+
+	<p>
+	  (This material is loosely based on Chapter 6 (4th &amp; 5th ed.), Hillegass and Preble)
+	</p>
+    
+	<p>
+	  You will experiment with delegation by changing your SpeakLine application delegate to conform to the <code>NSSpeechSynthesizerDelegate</code> protocol.
+
+	  Recall that the Timer screencast and lecture on building the MVC version of the timer also changed the application delegate to become a delegate of the <code>TimerModel</code>.
+	</p>
+
+	<h3>Exercise 1: using a delegate to improve the behaviour of the SpeakLine user interface</h3>
+	<p>
+	  Modify your SpeakLine <code>AppDelegate</code> to  respond to the <code>didFinishSpeaking</code> part of the <code>NSSpeechSynthesizerDelegate</code> protocol.  Start by logging to the console when the speech synthesiser finishes.  After that is working, change your code so that the Speak button is disabled whenever the speech synthesiser is speaking, and automatically becomes enabled again when the speech synthesiser finishes speaking. 
+	</p>
+
+	<h2>Additional exercises</h2>
+
+	<p>
+	  Just do as many of these as fit into your lab time.
+	</p>
+	
+	<h3>Exercise 2: A constrained window</h3>
+
+	<p>
+	  (This is heavily based on the first challenge from Chapter 6 of Hillegass and Preble (4th ed.))
+	</p>
+
+	<p>
+	  You should create an application that only has one window. Ensure that the window's delegate is set to a class for which you can write code.
+	</p>
+
+	<p>
+	  When your application is running, and the window is resized, you should ensure that the height of the window is always twice its width.
+
+	  You are likely to need to implement the delegate method <code>windowWillResize(sender:NSWindow, frameSize:NSSize)</code>.
+
+	  The following code demonstrates one way to create an NSSize that has a width of 200 points and a height of 100 points:
+	</p>
+
+	  <div class="codeblock">
+<div class="codeblocktitle"><a href="code/1/AppDelegate.swift">AppDelegate.swift</a></div>
+<pre class="linenumbers unselectable" style="float: left;"><span class="codeold">01:
+</span><span class="codeold">02:
+</span><span class="codeold">03:
+</span><span class="codeold">04:
+</span><span class="codeold">05:
+</span><span class="codeold">06:
+</span>07:
+08:
+<span class="codeold">09:
+</span><span class="codeold">10:
+</span></pre><pre class="code">
+<span class="codeold"><span class="swiftcode"><span class="swiftkeyword">class</span> AppDelegate : NSObject, <span class="swiftclass">NSApplicationDelegate</span> {</span></span>
+<span class="codeold"><span class="swiftcode"></span></span>
+<span class="codeold"><span class="swiftcode">    <span class="swiftkeyword">@IBOutlet</span> <span class="swiftkeyword">weak</span> <span class="swiftkeyword">var</span> window: <span class="swiftclass">NSWindow</span>!</span></span>
+<span class="codeold"><span class="swiftcode"></span></span>
+<span class="codeold"><span class="swiftcode">    <span class="swiftkeyword">func</span> applicationDidFinishLaunching(aNotification: <span class="swiftclass">NSNotification</span>) {</span></span>
+<span class="codeold"><span class="swiftcode">        <span class="swiftcomment">// Insert code here to initialize your application</span></span></span>
+<span class="swiftcode">        <span class="swiftkeyword">let</span> mySize = NSSize(width: <span class="swiftnumber">200</span>.<span class="swiftnumber">0</span>, height: <span class="swiftnumber">100</span>.<span class="swiftnumber">0</span>)</span>
+<span class="swiftcode">        <span class="swiftfunction">print</span>(<span class="swiftstring">"mySize is </span></span><span class="codeswift">\<span class="swiftstring">(</span>mySize.width<span class="swiftstring">)</span></span><span class="swiftcode"><span class="swiftstring"> wide and </span></span><span class="codeswift">\<span class="swiftstring">(</span>mySize.height<span class="swiftstring">)</span></span><span class="swiftcode"><span class="swiftstring">"</span>)</span>
+<span class="codeold"><span class="swiftcode">    }</span></span>
+<span class="codeold"><span class="swiftcode">}</span></span>
+</pre>
+</div>
+	  
+	<p>
+	  The Interface Builder's Size Inspector can be used to specify the initial size of the window.
+	</p>
+
+
+	<h3>Exercise 3: A simple to-do list application</h3>
+
+	<p>
+	  (This is the second challenge from Chapter 6 of Hillegass and Preble (4th ed.))
+	</p>
+
+	<p>
+	  "Make a to-do list application. The user will type tasks into the text field. When the user clicks the Add button, you will add the string to a mutable array, and the new task will appear at the end of the list.
+	</p>
+
+	<img class="block" src="images/To-do-list.jpg" style="max-width:476px; max-height:411px;" title="To-do list user interface and class structure" />
+
+	<p>
+	  When a new string is added to the array, you will need to send the message <code>reloadData</code> to the table view before you will see it.
+	</p>
+
+	<p>
+	  It is even better if you can make the table view editable. (Hint: <code>NSMutableArray</code> has a method <code>replaceObjectAtIndex:withObject:</code>)”
+	</p>
+	
+	<h3>Exercise 4: More Interface Builder practice—character counting application</h3>
+
+	<p>
+	  (This is based on the challenge from the end of Chapter 5 (4th ed.) in Hillegass and Preble’s book.)
+	</p>
+
+	<p>
+	  You should create an application that presents something similar to the user interface shown below.
+
+	  At first the window should appear follows.
+	</p>
+	<img class="block" src="images/CharacterCount-before-input.png" style="max-width:480px; max-height:161px;" title="CharacterCount application before input" />
+
+	<p>
+	  After a string is entered into the text field, and the user clicks the "Count Characters" button, the "???" label should change to include the number of characters in the string, as shown below.
+	</p>
+	
+	<img class="block" src="images/CharacterCount-after-input.png" style="max-width:480px; max-height:161px;" title="CharacterCount application after input" />
+
+	<p>
+	  It is important to know how to use the Cocoa classes in your application. For this exercise, you should recognise that the <code>NSTextField</code> class has the following field (Swift typically handles <code>NSString</code> / <code>String</code> conversion for you):
+	</p>
+
+	<p>
+	  <code>stringValue:NSString</code>
+	</p>
+
+	<p>
+	  Each major Swift version seems to have a different way of finding the length of a <code>String</code>. In Swift 3, to find the length of some <code>String</code> variable <code>s</code>, use the construct <code>s.characters.count</code>.
+	</p>
+
+	<p>
+	  There are many ways that you can interpolate a string value to update the text shown in the above window. Your code should only need two outlets and one action to work.
+	</p>
+	</div>
+
+	<div class="banner">
+		<a href="../../labs.php">COSC346 - Object Oriented Programming and User Interfaces</a>
+	</div>
+	</body>
+</html>
+
+<!--  LocalWords:  Preble codekeyword NSSpeechSynthesizer mdash
+ -->
+<!--  LocalWords:  NSSpeechSynthesizerDelegate
+ -->
